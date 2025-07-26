@@ -30,8 +30,13 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     background: transparent;
-    cursor: crosshair;
+    cursor: none;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: filter 0.3s ease;
+}
+
+#conformityCanvas:hover {
+    filter: brightness(1.1) contrast(1.05);
 }
 
 .interface-overlay {

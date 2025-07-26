@@ -7,6 +7,13 @@ class AbstractDisruption {
         this.disruptions = [];
         this.questionWaves = [];
         this.provocationParticles = [];
+        this.mouseTrail = [];
+        this.lastMousePos = { x: 0, y: 0 };
+        this.mouseSpeed = 0;
+        this.lastMoveTime = Date.now();
+        this.idleStartTime = null;
+        this.mouseHistory = [];
+        this.gestureThreshold = 50;
         
         this.disruptionLevel = 0;
         this.conformityIndex = 100;
@@ -44,7 +51,8 @@ class AbstractDisruption {
                     baseColor: [50, 50, 100],
                     currentColor: [50, 50, 100],
                     disrupted: false,
-                    lastDisruption: 0
+                    lastDisruption: 0,
+                    anticipation: 0.0
                 };
             }
         }
@@ -79,13 +87,30 @@ class AbstractDisruption {
     }
     
     handleMouseMove(e) {
-        if (!this.currentMode) return;
-        
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         
-        this.createSubtleDisturbance(x, y);
+        const currentTime = Date.now();
+        const deltaTime = currentTime - this.lastMoveTime;
+        const distance = Math.sqrt(
+            (x - this.lastMousePos.x) ** 2 + (y - this.lastMousePos.y) ** 2
+        );
+        
+        this.mouseSpeed = deltaTime > 0 ? distance / deltaTime : 0;
+        this.lastMoveTime = currentTime;
+        this.idleStartTime = null;
+        
+        this.addToMouseTrail(x, y);
+        this.createProximityEffects(x, y);
+        this.addToMouseHistory(x, y);
+        this.detectGestures();
+        
+        if (this.currentMode) {
+            this.createSubtleDisturbance(x, y);
+        }
+        
+        this.lastMousePos = { x, y };
     }
     
     createDisruption(x, y, mode) {
@@ -111,6 +136,45 @@ class AbstractDisruption {
         this.disruptGridArea(x, y, modeConfig.spread * 20, modeConfig.intensity);
     }
     
+    addToMouseTrail(x, y) {
+        this.mouseTrail.push({
+            x: x,
+            y: y,
+            life: 1.0,
+            intensity: Math.min(this.mouseSpeed * 0.1, 0.8),
+            size: 2 + Math.min(this.mouseSpeed * 0.05, 8),
+            timestamp: Date.now()
+        });
+        
+        if (this.mouseTrail.length > 50) {
+            this.mouseTrail.shift();
+        }
+    }
+    
+    createProximityEffects(mouseX, mouseY) {
+        const gridX = Math.floor(mouseX / this.gridSize);
+        const gridY = Math.floor(mouseY / this.gridSize);
+        const proximityRadius = 3;
+        
+        for (let dy = -proximityRadius; dy <= proximityRadius; dy++) {
+            for (let dx = -proximityRadius; dx <= proximityRadius; dx++) {
+                const cellX = gridX + dx;
+                const cellY = gridY + dy;
+                
+                if (cellX >= 0 && cellX < this.cols && cellY >= 0 && cellY < this.rows) {
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance <= proximityRadius) {
+                        const cell = this.conformityGrid[cellY][cellX];
+                        const influence = (proximityRadius - distance) / proximityRadius;
+                        
+                        cell.anticipation = Math.min(1.0, (cell.anticipation || 0) + influence * 0.1);
+                        cell.pulse += influence * 0.05;
+                    }
+                }
+            }
+        }
+    }
+
     createSubtleDisturbance(x, y) {
         if (Math.random() < 0.1) {
             const gridX = Math.floor(x / this.gridSize);
@@ -196,10 +260,11 @@ class AbstractDisruption {
     updateCellColor(cell) {
         const chaosInfluence = cell.chaos;
         const orderInfluence = cell.order;
+        const anticipationInfluence = cell.anticipation || 0;
         
-        const r = Math.floor(cell.baseColor[0] + chaosInfluence * 150);
-        const g = Math.floor(cell.baseColor[1] + (1 - orderInfluence) * 100);
-        const b = Math.floor(cell.baseColor[2] + orderInfluence * 50);
+        const r = Math.floor(cell.baseColor[0] + chaosInfluence * 150 + anticipationInfluence * 80);
+        const g = Math.floor(cell.baseColor[1] + (1 - orderInfluence) * 100 + anticipationInfluence * 60);
+        const b = Math.floor(cell.baseColor[2] + orderInfluence * 50 + anticipationInfluence * 120);
         
         cell.currentColor = [
             Math.min(255, Math.max(0, r)),
@@ -270,6 +335,20 @@ class AbstractDisruption {
         });
     }
     
+    updateMouseTrail() {
+        const currentTime = Date.now();
+        this.mouseTrail = this.mouseTrail.filter(point => {
+            point.life -= 0.02;
+            return point.life > 0;
+        });
+        
+        if (this.lastMoveTime && currentTime - this.lastMoveTime > 500) {
+            if (!this.idleStartTime) {
+                this.idleStartTime = currentTime;
+            }
+        }
+    }
+
     updateConformityGrid() {
         const currentTime = Date.now();
         
@@ -278,6 +357,11 @@ class AbstractDisruption {
                 const cell = this.conformityGrid[y][x];
                 
                 cell.pulse += 0.05;
+                
+                if (cell.anticipation > 0) {
+                    cell.anticipation = Math.max(0, cell.anticipation - 0.02);
+                    this.updateCellColor(cell);
+                }
                 
                 if (cell.disrupted && currentTime - cell.lastDisruption > 3000) {
                     cell.chaos = Math.max(0, cell.chaos - 0.01);
@@ -291,6 +375,108 @@ class AbstractDisruption {
                 }
             }
         }
+        
+        if (this.idleStartTime && currentTime - this.idleStartTime > 2000) {
+            if (Math.random() < 0.02) {
+                this.createSpontaneousDisruption();
+                this.idleStartTime = currentTime;
+            }
+        }
+    }
+    
+    addToMouseHistory(x, y) {
+        this.mouseHistory.push({ x, y, timestamp: Date.now() });
+        
+        if (this.mouseHistory.length > 20) {
+            this.mouseHistory.shift();
+        }
+    }
+    
+    detectGestures() {
+        if (this.mouseHistory.length < 5) return;
+        
+        const recent = this.mouseHistory.slice(-10);
+        const totalDistance = this.calculatePathDistance(recent);
+        const directDistance = this.calculateDirectDistance(recent[0], recent[recent.length - 1]);
+        
+        if (totalDistance > this.gestureThreshold) {
+            const curvature = totalDistance / (directDistance + 1);
+            
+            if (curvature > 1.8) {
+                this.createGestureEffect('spiral', recent);
+            } else if (this.detectZigzag(recent)) {
+                this.createGestureEffect('zigzag', recent);
+            } else if (curvature < 1.2 && this.mouseSpeed > 2) {
+                this.createGestureEffect('sweep', recent);
+            }
+        }
+    }
+    
+    calculatePathDistance(points) {
+        let distance = 0;
+        for (let i = 1; i < points.length; i++) {
+            distance += this.calculateDirectDistance(points[i-1], points[i]);
+        }
+        return distance;
+    }
+    
+    calculateDirectDistance(point1, point2) {
+        return Math.sqrt((point2.x - point1.x) ** 2 + (point2.y - point1.y) ** 2);
+    }
+    
+    detectZigzag(points) {
+        if (points.length < 6) return false;
+        
+        let directionChanges = 0;
+        let lastDirection = null;
+        
+        for (let i = 1; i < points.length - 1; i++) {
+            const dx1 = points[i].x - points[i-1].x;
+            const dx2 = points[i+1].x - points[i].x;
+            const currentDirection = dx1 * dx2 < 0 ? 'change' : 'same';
+            
+            if (lastDirection === 'same' && currentDirection === 'change') {
+                directionChanges++;
+            }
+            lastDirection = currentDirection;
+        }
+        
+        return directionChanges > 2;
+    }
+    
+    createGestureEffect(type, points) {
+        const centerX = points.reduce((sum, p) => sum + p.x, 0) / points.length;
+        const centerY = points.reduce((sum, p) => sum + p.y, 0) / points.length;
+        
+        switch (type) {
+            case 'spiral':
+                this.createDisruption(centerX, centerY, 'chaos');
+                break;
+            case 'zigzag':
+                points.forEach((point, i) => {
+                    if (i % 2 === 0) {
+                        this.createDisruption(point.x, point.y, 'challenge');
+                    }
+                });
+                break;
+            case 'sweep':
+                const startPoint = points[0];
+                const endPoint = points[points.length - 1];
+                this.createDisruption(startPoint.x, startPoint.y, 'question');
+                this.createDisruption(endPoint.x, endPoint.y, 'provocation');
+                break;
+        }
+        
+        this.mouseHistory = [];
+    }
+
+    createSpontaneousDisruption() {
+        const x = Math.random() * this.canvas.width;
+        const y = Math.random() * this.canvas.height;
+        const modes = ['question', 'challenge', 'provocation'];
+        const randomMode = modes[Math.floor(Math.random() * modes.length)];
+        
+        this.createDisruption(x, y, randomMode);
     }
     
     render() {
@@ -298,6 +484,7 @@ class AbstractDisruption {
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
         this.renderConformityGrid();
+        this.renderMouseTrail();
         this.renderQuestionWaves();
         this.renderDisruptions();
         this.renderProvocationParticles();
@@ -324,6 +511,14 @@ class AbstractDisruption {
                     this.ctx.strokeStyle = `rgba(255, 255, 255, ${cell.chaos * 0.5})`;
                     this.ctx.lineWidth = 1;
                     this.ctx.strokeRect(pixelX, pixelY, this.gridSize - 1, this.gridSize - 1);
+                }
+                
+                if (cell.anticipation > 0.1) {
+                    this.ctx.strokeStyle = `rgba(255, 255, 255, ${cell.anticipation * 0.3})`;
+                    this.ctx.lineWidth = 1;
+                    this.ctx.setLineDash([2, 2]);
+                    this.ctx.strokeRect(pixelX, pixelY, this.gridSize - 1, this.gridSize - 1);
+                    this.ctx.setLineDash([]);
                 }
             }
         }
@@ -380,6 +575,44 @@ class AbstractDisruption {
         });
     }
     
+    renderMouseTrail() {
+        this.mouseTrail.forEach((point, index) => {
+            this.ctx.save();
+            
+            const trailAlpha = point.life * 0.6;
+            const speedInfluence = Math.min(point.intensity * 2, 1);
+            this.ctx.globalAlpha = trailAlpha;
+            
+            const gradient = this.ctx.createRadialGradient(
+                point.x, point.y, 0,
+                point.x, point.y, point.size
+            );
+            
+            const baseIntensity = point.intensity * speedInfluence;
+            gradient.addColorStop(0, `rgba(255, 255, 255, ${baseIntensity})`);
+            gradient.addColorStop(0.3, `rgba(128, 200, 255, ${baseIntensity * 0.8})`);
+            gradient.addColorStop(0.7, `rgba(255, 128, 255, ${baseIntensity * 0.4})`);
+            gradient.addColorStop(1, 'transparent');
+            
+            this.ctx.fillStyle = gradient;
+            this.ctx.beginPath();
+            this.ctx.arc(point.x, point.y, point.size, 0, Math.PI * 2);
+            this.ctx.fill();
+            
+            if (index > 0 && speedInfluence > 0.3) {
+                const prevPoint = this.mouseTrail[index - 1];
+                this.ctx.strokeStyle = `rgba(255, 255, 255, ${trailAlpha * 0.3})`;
+                this.ctx.lineWidth = Math.max(1, point.size * 0.3);
+                this.ctx.beginPath();
+                this.ctx.moveTo(prevPoint.x, prevPoint.y);
+                this.ctx.lineTo(point.x, point.y);
+                this.ctx.stroke();
+            }
+            
+            this.ctx.restore();
+        });
+    }
+
     renderProvocationParticles() {
         this.provocationParticles.forEach(particle => {
             this.ctx.save();
@@ -401,6 +634,7 @@ class AbstractDisruption {
         this.updateDisruptions();
         this.updateQuestionWaves();
         this.updateProvocationParticles();
+        this.updateMouseTrail();
         this.updateConformityGrid();
         this.updateMetrics();
         
