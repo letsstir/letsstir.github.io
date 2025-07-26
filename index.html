@@ -3,37 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STIR - Interactive Pixel Experience</title>
+    <title>STIR - Disruption Canvas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header class="pixel-header">
-            <h1 class="pixel-title">S T I R</h1>
-            <p class="pixel-subtitle">Interactive Pixel Mixing</p>
-        </header>
-        
-        <div class="game-area">
-            <canvas id="stirCanvas" width="800" height="600"></canvas>
-            <div class="spoon" id="spoon"></div>
-        </div>
-        
-        <div class="controls">
-            <button class="pixel-btn" id="addCoffee">Add Coffee</button>
-            <button class="pixel-btn" id="addMilk">Add Milk</button>
-            <button class="pixel-btn" id="addSugar">Add Sugar</button>
-            <button class="pixel-btn" id="addColor">Add Paint</button>
-            <button class="pixel-btn" id="clearMix">Clear Bowl</button>
-        </div>
-        
-        <div class="info-panel">
-            <div class="mix-counter">
-                <span>Stir Count: </span>
-                <span id="stirCount">0</span>
+    <div class="disruption-field">
+        <canvas id="conformityCanvas" width="1200" height="800"></canvas>
+        <div class="interface-overlay">
+            <header class="abstract-header">
+                <h1 class="disruption-title">STIR</h1>
+                <p class="manifesto">Challenge • Provoke • Awaken</p>
+            </header>
+            
+            <div class="disruption-controls">
+                <button class="disrupt-btn" id="questionMode">Ask Questions</button>
+                <button class="disrupt-btn" id="challengeMode">Challenge Order</button>
+                <button class="disrupt-btn" id="provocationMode">Provoke Change</button>
+                <button class="disrupt-btn" id="chaosMode">Embrace Chaos</button>
+                <button class="reset-btn" id="resetField">Reset Conformity</button>
             </div>
-            <div class="mix-quality">
-                <span>Mix Quality: </span>
-                <span id="mixQuality">Not Mixed</span>
+            
+            <div class="status-display">
+                <div class="disruption-meter">
+                    <span class="meter-label">Disruption Level</span>
+                    <div class="meter-bar">
+                        <div class="meter-fill" id="disruptionLevel"></div>
+                    </div>
+                </div>
+                <div class="conformity-index">
+                    <span class="index-label">Conformity Index</span>
+                    <span class="index-value" id="conformityValue">100%</span>
+                </div>
             </div>
         </div>
     </div>
