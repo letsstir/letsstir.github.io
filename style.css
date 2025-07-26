@@ -116,11 +116,12 @@ body {
 
 .mode-segment {
     position: absolute;
+    top: 50%;
+    left: 50%;
     width: 70px;
     height: 70px;
     cursor: pointer;
-    transform: rotate(var(--rotation)) translateY(-55px) rotate(calc(-1 * var(--rotation)));
-    transform-origin: 50% 90px;
+    transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-55px) rotate(calc(-1 * var(--rotation)));
     transition: all 0.3s ease;
     border-radius: 50%;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -133,7 +134,7 @@ body {
 }
 
 .mode-segment:hover {
-    transform: rotate(var(--rotation)) translateY(-55px) rotate(calc(-1 * var(--rotation))) scale(1.1);
+    transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-55px) rotate(calc(-1 * var(--rotation))) scale(1.1);
     border-color: rgba(255, 255, 255, 0.6);
     background: rgba(255, 255, 255, 0.1);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
@@ -143,7 +144,7 @@ body {
     border-color: #ff0080;
     background: rgba(255, 0, 128, 0.2);
     box-shadow: 0 0 25px rgba(255, 0, 128, 0.4);
-    transform: rotate(var(--rotation)) translateY(-55px) rotate(calc(-1 * var(--rotation))) scale(1.15);
+    transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-55px) rotate(calc(-1 * var(--rotation))) scale(1.15);
 }
 
 .mode-segment[data-mode="question"]:hover, .mode-segment[data-mode="question"].active {
@@ -353,16 +354,15 @@ body {
     .mode-segment {
         width: 60px;
         height: 60px;
-        transform: rotate(var(--rotation)) translateY(-50px) rotate(calc(-1 * var(--rotation)));
-        transform-origin: 50% 80px;
+        transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-50px) rotate(calc(-1 * var(--rotation)));
     }
     
     .mode-segment:hover {
-        transform: rotate(var(--rotation)) translateY(-50px) rotate(calc(-1 * var(--rotation))) scale(1.1);
+        transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-50px) rotate(calc(-1 * var(--rotation))) scale(1.1);
     }
     
     .mode-segment.active {
-        transform: rotate(var(--rotation)) translateY(-50px) rotate(calc(-1 * var(--rotation))) scale(1.15);
+        transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-50px) rotate(calc(-1 * var(--rotation))) scale(1.15);
     }
     
     .mode-icon {
@@ -428,16 +428,15 @@ body {
     .mode-segment {
         width: 50px;
         height: 50px;
-        transform: rotate(var(--rotation)) translateY(-45px) rotate(calc(-1 * var(--rotation)));
-        transform-origin: 50% 70px;
+        transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-45px) rotate(calc(-1 * var(--rotation)));
     }
     
     .mode-segment:hover {
-        transform: rotate(var(--rotation)) translateY(-45px) rotate(calc(-1 * var(--rotation))) scale(1.1);
+        transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-45px) rotate(calc(-1 * var(--rotation))) scale(1.1);
     }
     
     .mode-segment.active {
-        transform: rotate(var(--rotation)) translateY(-45px) rotate(calc(-1 * var(--rotation))) scale(1.15);
+        transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-45px) rotate(calc(-1 * var(--rotation))) scale(1.15);
     }
     
     .mode-icon {
@@ -496,16 +495,15 @@ body {
     .mode-segment {
         width: 40px;
         height: 40px;
-        transform: rotate(var(--rotation)) translateY(-40px) rotate(calc(-1 * var(--rotation)));
-        transform-origin: 50% 60px;
+        transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-40px) rotate(calc(-1 * var(--rotation)));
     }
     
     .mode-segment:hover {
-        transform: rotate(var(--rotation)) translateY(-40px) rotate(calc(-1 * var(--rotation))) scale(1.1);
+        transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-40px) rotate(calc(-1 * var(--rotation))) scale(1.1);
     }
     
     .mode-segment.active {
-        transform: rotate(var(--rotation)) translateY(-40px) rotate(calc(-1 * var(--rotation))) scale(1.15);
+        transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-40px) rotate(calc(-1 * var(--rotation))) scale(1.15);
     }
     
     .mode-icon {
