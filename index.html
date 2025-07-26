@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STIR - Interactive Pixel Experience</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="pixel-header">
+            <h1 class="pixel-title">S T I R</h1>
+            <p class="pixel-subtitle">Interactive Pixel Mixing</p>
+        </header>
+        
+        <div class="game-area">
+            <canvas id="stirCanvas" width="800" height="600"></canvas>
+            <div class="spoon" id="spoon"></div>
+        </div>
+        
+        <div class="controls">
+            <button class="pixel-btn" id="addCoffee">Add Coffee</button>
+            <button class="pixel-btn" id="addMilk">Add Milk</button>
+            <button class="pixel-btn" id="addSugar">Add Sugar</button>
+            <button class="pixel-btn" id="addColor">Add Paint</button>
+            <button class="pixel-btn" id="clearMix">Clear Bowl</button>
+        </div>
+        
+        <div class="info-panel">
+            <div class="mix-counter">
+                <span>Stir Count: </span>
+                <span id="stirCount">0</span>
+            </div>
+            <div class="mix-quality">
+                <span>Mix Quality: </span>
+                <span id="mixQuality">Not Mixed</span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
