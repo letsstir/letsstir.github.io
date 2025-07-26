@@ -15,12 +15,34 @@
                 <p class="manifesto">Challenge • Provoke • Awaken</p>
             </header>
             
-            <div class="disruption-controls">
-                <button class="disrupt-btn" id="questionMode">Ask Questions</button>
-                <button class="disrupt-btn" id="challengeMode">Challenge Order</button>
-                <button class="disrupt-btn" id="provocationMode">Provoke Change</button>
-                <button class="disrupt-btn" id="chaosMode">Embrace Chaos</button>
-                <button class="reset-btn" id="resetField">Reset Conformity</button>
+            <div class="mode-selector">
+                <div class="selector-ring">
+                    <div class="mode-segment" data-mode="question" style="--rotation: 0deg;">
+                        <div class="mode-icon">?</div>
+                        <div class="mode-label">Question</div>
+                    </div>
+                    <div class="mode-segment" data-mode="challenge" style="--rotation: 90deg;">
+                        <div class="mode-icon">⚡</div>
+                        <div class="mode-label">Challenge</div>
+                    </div>
+                    <div class="mode-segment" data-mode="provocation" style="--rotation: 180deg;">
+                        <div class="mode-icon">🔥</div>
+                        <div class="mode-label">Provoke</div>
+                    </div>
+                    <div class="mode-segment" data-mode="chaos" style="--rotation: 270deg;">
+                        <div class="mode-icon">∞</div>
+                        <div class="mode-label">Chaos</div>
+                    </div>
+                    <div class="selector-center" id="resetField">
+                        <div class="reset-icon">↻</div>
+                        <div class="reset-label">Reset</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="interaction-hints">
+                <div class="hint-item" id="modeHint">Select a mode to begin stirring</div>
+                <div class="hint-item" id="gestureHint"></div>
             </div>
             
             <div class="status-display">

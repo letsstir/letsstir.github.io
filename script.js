@@ -105,17 +105,46 @@ class AbstractDisruption {
             this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
         }
         
-        document.getElementById('questionMode').addEventListener('click', () => this.setMode('question'));
-        document.getElementById('challengeMode').addEventListener('click', () => this.setMode('challenge'));
-        document.getElementById('provocationMode').addEventListener('click', () => this.setMode('provocation'));
-        document.getElementById('chaosMode').addEventListener('click', () => this.setMode('chaos'));
+        document.querySelectorAll('.mode-segment').forEach(segment => {
+            segment.addEventListener('click', (e) => {
+                const mode = e.currentTarget.getAttribute('data-mode');
+                this.setMode(mode);
+            });
+        });
+        
         document.getElementById('resetField').addEventListener('click', () => this.resetField());
+        
+        this.updateHints();
     }
     
     setMode(mode) {
-        document.querySelectorAll('.disrupt-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(mode + 'Mode').classList.add('active');
+        document.querySelectorAll('.mode-segment').forEach(segment => segment.classList.remove('active'));
+        document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
         this.currentMode = mode;
+        this.updateHints();
+    }
+    
+    updateHints() {
+        const modeHint = document.getElementById('modeHint');
+        const gestureHint = document.getElementById('gestureHint');
+        
+        if (!this.currentMode) {
+            modeHint.textContent = 'Select a mode to begin stirring';
+            modeHint.classList.add('visible');
+            gestureHint.classList.remove('visible');
+        } else {
+            modeHint.classList.remove('visible');
+            
+            const hints = {
+                question: this.isTouchDevice ? 'Touch & drag to question conformity' : 'Click & move to spark questions',
+                challenge: this.isTouchDevice ? 'Swipe boldly to challenge order' : 'Move fast to challenge norms',
+                provocation: this.isTouchDevice ? 'Draw patterns to provoke change' : 'Create gestures to provoke',
+                chaos: this.isTouchDevice ? 'Spiral touches unleash chaos' : 'Spiral movements create chaos'
+            };
+            
+            gestureHint.textContent = hints[this.currentMode];
+            gestureHint.classList.add('visible');
+        }
     }
     
     handleCanvasClick(e) {
@@ -393,8 +422,9 @@ class AbstractDisruption {
         this.conformityIndex = 100;
         this.updateMetrics();
         
-        document.querySelectorAll('.disrupt-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.mode-segment').forEach(segment => segment.classList.remove('active'));
         this.currentMode = null;
+        this.updateHints();
     }
     
     updateDisruptions() {
