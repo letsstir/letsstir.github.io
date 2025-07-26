@@ -13,13 +13,15 @@ class AbstractDisruption {
         this.lastMoveTime = Date.now();
         this.idleStartTime = null;
         this.mouseHistory = [];
-        this.gestureThreshold = 50;
+        this.isTouchDevice = 'ontouchstart' in window;
+        this.gestureThreshold = this.isTouchDevice ? 80 : 50;
         
         this.disruptionLevel = 0;
         this.conformityIndex = 100;
         this.currentMode = null;
         
-        this.gridSize = 20;
+        this.setupCanvas();
+        this.gridSize = Math.max(15, Math.min(25, Math.floor(Math.min(this.canvas.width, this.canvas.height) / 40)));
         this.cols = Math.floor(this.canvas.width / this.gridSize);
         this.rows = Math.floor(this.canvas.height / this.gridSize);
         
@@ -34,6 +36,41 @@ class AbstractDisruption {
         this.animate();
     }
     
+    setupCanvas() {
+        const container = this.canvas.parentElement;
+        const rect = container.getBoundingClientRect();
+        
+        const maxWidth = Math.min(window.innerWidth * 0.95, 1200);
+        const maxHeight = Math.min(window.innerHeight * 0.7, 800);
+        
+        this.canvas.width = maxWidth;
+        this.canvas.height = maxHeight;
+        
+        this.canvas.style.width = maxWidth + 'px';
+        this.canvas.style.height = maxHeight + 'px';
+        
+        window.addEventListener('resize', () => this.handleResize());
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => this.handleResize(), 500);
+        });
+    }
+    
+    handleResize() {
+        const maxWidth = Math.min(window.innerWidth * 0.95, 1200);
+        const maxHeight = Math.min(window.innerHeight * 0.7, 800);
+        
+        this.canvas.width = maxWidth;
+        this.canvas.height = maxHeight;
+        this.canvas.style.width = maxWidth + 'px';
+        this.canvas.style.height = maxHeight + 'px';
+        
+        this.gridSize = Math.max(15, Math.min(25, Math.floor(Math.min(maxWidth, maxHeight) / 40)));
+        this.cols = Math.floor(maxWidth / this.gridSize);
+        this.rows = Math.floor(maxHeight / this.gridSize);
+        
+        this.initConformityGrid();
+    }
+
     init() {
         this.initConformityGrid();
         this.bindEvents();
@@ -59,8 +96,14 @@ class AbstractDisruption {
     }
     
     bindEvents() {
-        this.canvas.addEventListener('click', (e) => this.handleCanvasClick(e));
-        this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+        if (this.isTouchDevice) {
+            this.canvas.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
+            this.canvas.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+            this.canvas.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: false });
+        } else {
+            this.canvas.addEventListener('click', (e) => this.handleCanvasClick(e));
+            this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+        }
         
         document.getElementById('questionMode').addEventListener('click', () => this.setMode('question'));
         document.getElementById('challengeMode').addEventListener('click', () => this.setMode('challenge'));
@@ -111,6 +154,57 @@ class AbstractDisruption {
         }
         
         this.lastMousePos = { x, y };
+    }
+    
+    handleTouchStart(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = this.canvas.getBoundingClientRect();
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        
+        if (this.currentMode) {
+            this.createDisruption(x, y, this.currentMode);
+            this.updateMetrics();
+        }
+        
+        this.lastMousePos = { x, y };
+        this.lastMoveTime = Date.now();
+        this.idleStartTime = null;
+    }
+    
+    handleTouchMove(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = this.canvas.getBoundingClientRect();
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        
+        const currentTime = Date.now();
+        const deltaTime = currentTime - this.lastMoveTime;
+        const distance = Math.sqrt(
+            (x - this.lastMousePos.x) ** 2 + (y - this.lastMousePos.y) ** 2
+        );
+        
+        this.mouseSpeed = deltaTime > 0 ? distance / deltaTime : 0;
+        this.lastMoveTime = currentTime;
+        this.idleStartTime = null;
+        
+        this.addToMouseTrail(x, y);
+        this.createProximityEffects(x, y);
+        this.addToMouseHistory(x, y);
+        this.detectGestures();
+        
+        if (this.currentMode) {
+            this.createSubtleDisturbance(x, y);
+        }
+        
+        this.lastMousePos = { x, y };
+    }
+    
+    handleTouchEnd(e) {
+        e.preventDefault();
+        this.idleStartTime = Date.now() + 1000;
     }
     
     createDisruption(x, y, mode) {
