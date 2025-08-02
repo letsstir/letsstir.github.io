@@ -1,0 +1,13 @@
+- Slogan: AI employee?
+- 想呈现一个单页的**build in public** log
+- 开屏是一个视觉体量很大的两分屏，一边是chatbot，一边是企业agent （参考pi）
+[Image]
+- Chatbot的核心就是一个跳转，会直接跳转下载
+- 企业agent核心内容一个轴（模糊时间)，把我们的思考讨论尝试甚至挣扎都显化
+      - 每个小节点是一个feature，对应**一篇文章和一个视频**来讲解这个痛点，和演示一个迷你的技术向的demo (可下载的小玩意儿，开源/上app store）；社交媒体也会对应发布（可以做一个产品名的新号）
+      - 每一个大节点是一个正式的demo video（一种使用场景及一些features的集成）；社交媒体发布，也会邀请kol宣传
+      - 整个开发过程是逐渐点亮节点的过程，也是逐渐分享vision的过程（没想好的节点内容可以先模糊，敬请期待）
+      - 点赞pop up feature 优先级 （怎么准确捕捉b端用户需求）
+      - 然后核心内容是邀请感兴趣的prospects组成前期测试团队
+  
+Reference: https://roadmap.dify.ai/roadmap

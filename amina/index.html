@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amina - AI Employee</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1>Amina</h1>
+                <span class="tagline">AI Employee</span>
+            </div>
+            <nav class="nav">
+                <a href="#chatbot" class="nav-link">Chatbot</a>
+                <a href="#roadmap" class="nav-link">Roadmap</a>
+                <a href="#join" class="nav-link">Join Testing</a>
+            </nav>
+        </header>
+
+        <!-- Hero Section - Mondrian Style Split Screen -->
+        <main class="hero-section">
+            <!-- Left Block - Chatbot -->
+            <section class="hero-block chatbot-block" id="chatbot">
+                <div class="block-content">
+                    <div class="hero-title">
+                        <h2>Amina</h2>
+                        <p>AI Chatbot</p>
+                    </div>
+                    
+                    <div class="hero-description">
+                        <p>Intelligent conversations<br>Instant responses<br>Always available</p>
+                    </div>
+                    
+                    <button class="hero-action-btn chatbot-btn" onclick="handleChatbotDemo()">
+                        <span>Try Chat</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <!-- Geometric accent -->
+                <div class="geometric-accent accent-1"></div>
+            </section>
+
+            <!-- Right Block - Enterprise Agent -->
+            <section class="hero-block enterprise-block" id="enterprise">
+                <div class="block-content">
+                    <div class="hero-title">
+                        <h2>Amina</h2>
+                        <p>Enterprise Agent</p>
+                    </div>
+                    
+                    <div class="hero-description">
+                        <p>Workflow automation<br>Business intelligence<br>Enterprise integration</p>
+                    </div>
+                    
+                    <button class="hero-action-btn enterprise-btn" onclick="handleEnterpriseDemo()">
+                        <span>Explore Timeline</span>
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                </div>
+                
+                <!-- Geometric accent -->
+                <div class="geometric-accent accent-2"></div>
+            </section>
+
+            <!-- Central divider line -->
+            <div class="mondrian-divider"></div>
+            
+            <!-- Horizontal accent lines -->
+            <div class="horizontal-accent accent-top"></div>
+            <div class="horizontal-accent accent-bottom"></div>
+        </main>
+
+        <!-- Timeline Section -->
+        <section class="timeline-section" id="roadmap">
+            <div class="timeline-container">
+                <div class="timeline-header">
+                    <h2>Build in Public</h2>
+                    <p>Our journey to creating the perfect AI employee</p>
+                </div>
+                
+                <div class="timeline">
+                    <!-- Major Milestone 1 -->
+                    <div class="timeline-item major-milestone completed">
+                        <div class="timeline-marker">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h3>Project Launch</h3>
+                            <p class="timeline-date">Q1 2024</p>
+                            <p>Started building Amina with a vision to revolutionize workplace AI</p>
+                            <div class="milestone-media">
+                                <button class="demo-btn">
+                                    <i class="fas fa-play"></i>
+                                    Watch Demo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Small Feature 1 -->
+                    <div class="timeline-item small-feature completed">
+                        <div class="timeline-marker">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Natural Language Processing</h4>
+                            <p>Advanced NLP capabilities for better understanding</p>
+                            <div class="feature-content">
+                                <div class="feature-preview">
+                                    <div class="preview-text">
+                                        <strong>Key Features:</strong>
+                                        <ul>
+                                            <li>Multi-language support (EN, ZH, ES, FR)</li>
+                                            <li>Context-aware conversation memory</li>
+                                            <li>Industry-specific terminology recognition</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="feature-actions">
+                                    <button class="action-btn article-btn" onclick="showArticleModal('nlp')">
+                                        <i class="fas fa-file-text"></i>
+                                        Technical Deep Dive
+                                    </button>
+                                    <button class="action-btn demo-btn-small" onclick="showMiniDemo('nlp')">
+                                        <i class="fas fa-play"></i>
+                                        Try NLP Demo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Small Feature 2 -->
+                    <div class="timeline-item small-feature completed">
+                        <div class="timeline-marker">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Workflow Automation</h4>
+                            <p>Streamline repetitive tasks with intelligent automation</p>
+                            <div class="feature-content">
+                                <div class="feature-preview">
+                                    <div class="preview-text">
+                                        <strong>Automation Capabilities:</strong>
+                                        <ul>
+                                            <li>Email processing & response generation</li>
+                                            <li>Document classification & routing</li>
+                                            <li>Meeting scheduling & calendar management</li>
+                                            <li>Data entry & report generation</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="feature-actions">
+                                    <button class="action-btn article-btn" onclick="showArticleModal('automation')">
+                                        <i class="fas fa-file-text"></i>
+                                        Implementation Guide
+                                    </button>
+                                    <button class="action-btn demo-btn-small" onclick="showMiniDemo('automation')">
+                                        <i class="fas fa-play"></i>
+                                        Automation Simulator
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Major Milestone 2 -->
+                    <div class="timeline-item major-milestone in-progress">
+                        <div class="timeline-marker">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h3>Enterprise Integration</h3>
+                            <p class="timeline-date">Q2 2024</p>
+                            <p>Seamless integration with enterprise systems and workflows</p>
+                            <div class="milestone-media">
+                                <button class="demo-btn">
+                                    <i class="fas fa-play"></i>
+                                    Watch Demo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Small Feature 3 -->
+                    <div class="timeline-item small-feature pending">
+                        <div class="timeline-marker">
+                            <i class="fas fa-chart-analytics"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Analytics Dashboard</h4>
+                            <p>Comprehensive insights and performance metrics</p>
+                            <div class="feature-content">
+                                <div class="feature-preview">
+                                    <div class="preview-text">
+                                        <strong>Planned Analytics:</strong>
+                                        <ul>
+                                            <li>Task completion rate & time tracking</li>
+                                            <li>User interaction patterns analysis</li>
+                                            <li>Performance bottleneck identification</li>
+                                            <li>ROI & productivity metrics</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="feature-actions">
+                                    <span class="coming-soon-badge">Q3 2024</span>
+                                    <button class="action-btn preview-btn" onclick="showPreview('analytics')">
+                                        <i class="fas fa-eye"></i>
+                                        Preview Mockups
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Small Feature 4 -->
+                    <div class="timeline-item small-feature pending">
+                        <div class="timeline-marker">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Security & Compliance</h4>
+                            <p>Enterprise-grade security and compliance features</p>
+                            <div class="feature-content">
+                                <div class="feature-preview">
+                                    <div class="preview-text">
+                                        <strong>Security Framework:</strong>
+                                        <ul>
+                                            <li>End-to-end encryption (AES-256)</li>
+                                            <li>GDPR & SOC2 compliance ready</li>
+                                            <li>Role-based access control (RBAC)</li>
+                                            <li>Audit logs & data governance</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="feature-actions">
+                                    <span class="coming-soon-badge">Q4 2024</span>
+                                    <button class="action-btn preview-btn" onclick="showPreview('security')">
+                                        <i class="fas fa-eye"></i>
+                                        Security Whitepaper
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Major Milestone 3 -->
+                    <div class="timeline-item major-milestone pending">
+                        <div class="timeline-marker">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h3>Global Launch</h3>
+                            <p class="timeline-date">Q3 2024</p>
+                            <p>Full product launch with multi-language support</p>
+                            <div class="milestone-media">
+                                <button class="demo-btn disabled">
+                                    <i class="fas fa-clock"></i>
+                                    Coming Soon
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section class="cta-section" id="join">
+            <div class="cta-container">
+                <h2>Join Our Testing Team</h2>
+                <p>Be among the first to experience Amina and help shape the future of AI employees</p>
+                
+                <div class="signup-form">
+                    <input type="email" placeholder="Enter your email address" id="emailInput">
+                    <button class="signup-btn" onclick="handleSignup()">
+                        Join Testing Team
+                    </button>
+                </div>
+                
+                <div class="benefits">
+                    <div class="benefit">
+                        <i class="fas fa-star"></i>
+                        <span>Early Access</span>
+                    </div>
+                    <div class="benefit">
+                        <i class="fas fa-feedback"></i>
+                        <span>Direct Feedback Channel</span>
+                    </div>
+                    <div class="benefit">
+                        <i class="fas fa-gift"></i>
+                        <span>Exclusive Features</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Like Popup Feature -->
+        <div class="like-popup" id="likePopup">
+            <div class="like-content">
+                <h3>Enjoying Amina?</h3>
+                <p>Help us understand what B2B users need most</p>
+                <div class="like-buttons">
+                    <button class="like-btn" onclick="handleLike('automation')">
+                        <i class="fas fa-robot"></i>
+                        Automation
+                    </button>
+                    <button class="like-btn" onclick="handleLike('analytics')">
+                        <i class="fas fa-chart-bar"></i>
+                        Analytics
+                    </button>
+                    <button class="like-btn" onclick="handleLike('integration')">
+                        <i class="fas fa-plug"></i>
+                        Integration
+                    </button>
+                </div>
+                <button class="close-popup" onclick="closePopup()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
